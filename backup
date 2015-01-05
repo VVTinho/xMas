@@ -1,0 +1,62 @@
+#!/bin/bash
+
+# Start the script with command clear
+clear
+
+echo "Backup Script"
+echo ""
+echo "V.1"
+echo ""
+echo "Created by vladimir.trigueiros@gmail.com"
+echo "LX14"
+echo ""
+read -p "Please Press ENTER To Continue..." waitForEnter
+
+# Alert the user and wait 3 clicks
+echo "BACKUP Initiating..."
+echo ""
+sleep 3
+
+# Ask The User For Their Current Username (For Backup File Placement & Permissions)
+# read -p "What username are you currently logged into? (must be IDENTICAL to username you are currently using!!): " backupUser
+
+# Backup Entire System To the Specified User's homedir/backup.tgz (../../ included so script can be put in subdirectory)
+echo "Enter any directories you want to exclude from the backup.tgz"
+echo "Syntax: --exclude=/folder"
+read -p "Please enter them now, each separated with a space: " strExclusions 
+
+mv /home/vvt/Desktop/info /home/vvt
+mv /home/vvt/Desktop/files /home/vvt
+
+now=$(date +%Y%m%d-%H%M%S)
+a="lx14backup"
+b="$(hostname)"
+
+# ${strExclusions} /
+tar cvf ${a}.${b}.${now}.tar /home/vvt/var
+
+# Move the new created backup file to directory
+mv /home/vvt/var/${a}.${b}.${now}.tar /home/vvt 
+
+# Finish backup, alert the user
+echo ""
+echo "BACKUP Complete!"
+echo ""
+
+# Then Set backup.tz File Privilidges So That The Specified USER Can Read, Write & Execute
+echo "Setting Backup File Privilidges..."
+echo ""
+
+# Set The File's Group As the Specified $backupUser
+chgrp $backupUser ../../lx14bachost_yymmddhhmm_T.tz
+
+# Set Read, Write & Execute Privilidges For The Owner (root)
+chmod u+rwx ../../lx14bachost_yymmddhhmm_T.tz
+
+# Set Read, Write & Execute Privilidges For The Specified Group ($backupUser)
+chmod g+rwx ../../lx14bachost_yymmddhhmm_T.tz
+
+# Alert The User, Wait 3 Clicks & Terminate The Script
+echo "TERMINATING..."
+echo ""
+sleep 3
