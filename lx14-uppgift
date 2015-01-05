@@ -1,0 +1,80 @@
+LX14 Jullabb
+
+Oversikt
+Denna laboration ska göras under julledigheten och lämnas in senast 2015-01-06 kl 18.00. Inlämningen ska göras i form av ett komprimerat tar-arkiv som ska innehålla alla filer i lösningen. Filen mailas till lx14rein@dogfrog.com. Arkivfilens namn ska ha format Xmaslab_FörnamnEfternamn.tz. 
+Uppgiften går ut på att skapa ett backupskript som tar med de viktigaste förändringarna i filsystemet, att skriva en kravspec och att dokumentera uppgiften. Backupskriptet ska dessutom versionshanteras, Backupen ska loggas, startas automatiskt och dess status ska helst visas på en webbsida. 
+Beskrivning
+Du jobbar som systemadministratör på ett kontor där ni har en PC per anställd. Operativsystemet på alla datorer är Ubuntu Linux 14.04 för tillfället. Några datorer kör också en webbserverprocess (Apache2). 
+Din chef är ingen tekniker, så han behöver din hjälp att skriva en kravspec utgående från de sk. Use Cases han formulerat (se nedan). Chefen har inte bestämt ifall det blir du som får skriva backupskriptet, eller om uppdraget ska outsourcas till ett företag i Kina. Därför måste kravspecen vara mycket noggrann, och skrivas på engelska. 
+En stund efter att kravspecen är klar bestämmer sig chefen för att det blir du som ska göra jobbet i alla fall. Det består i att skriva skriptet, definiera ett antal test, och sedan skriva användarhandboken för din kollegor (på engelska). 
+Use Cases
+Nedanstående Use Cases (ibland kallas de User Stories) har formulerats av din chef. Skriv om dem till konkreta krav! Om kraven inte är hårda (ska-krav) bör de ses som frivilliga att implementera om det finns tid över. 
+1. De filer som backas ska alltid hamna i en och samma packade arkivfil
+2. Om inte annat angivits ska backupen innehålla alla användares hemkataloger, /etc/local, /var/log och /etc
+3. Arkivfilernas namn ska ha format lx14bachost_yymmddhhmm_T.tz där host är datorns namn (hostname), yymmdd är datum, timme och minut. T ska vara F vid full backup respektive I vid inkrementell backup.
+4. Den första filen i varje arkiv ska heta INFO.TXT
+5. INFO.TXT ska innehålla information om datorn, operativsystemet och annan fakta som kan vara bra att ha på längre sikt. Filen ska också informera om vilken version av backupskriptet som skapade denna backup (och INFO.TXT)
+6. Den andra filen i arkivet ska heta FILES.TXT och vara en komplett lista över vilka filer och kataloger som ingår i arkivet. Informationen ska kunna återläsas av båda människa och maskin
+7. Man ska kunna välja antingen full backup eller inkrementell, åtminstone via switcharna -t [f|i] (och gärna --type_full resp type_incremental). Om möjligt helst också via konfigurationsfil
+8. Filernas status (ägare, grupp, access) ska bevaras i arkivet
+9. Det vore bra om skriptet kunde versionhanteras, helst med Git, annars Mercurial eller SVN. Man kan kanske använda github
+10. Om versionshantering införs vore det bra om man kan starta skriptet med switch -V. Då ska det skriva ut sitt versionsnummer till stdout och avslutas. Samma sak bör också kunna ske med switch --version
+11. Med switch -h (och helst även --help) ska skriptet skriva ut en kompakt hjälp till stdout och avslutas.
+12. Skriptet ska startas automatiskt varje måndag till fredag kl 17:30
+13. Det ska inte gå att exekvera samma skript på samma dator samtidigt
+14. Om något går fel ska felet loggas och skriptet avbrytas på ett kontrollerat sätt utan att data förloras eller ligger kvar och skräpar
+15. Det vore bra om ett mail skickas till administratören ifall fel uppstår. Detta mail måste vara klart och tydligt så att mottagaren vet exakt vad den bör vidta för åtgärd
+16. Arkivet och temporära filer måste skyddas mot obehörig åtkomst
+17. Om datorn har en webbserver igång bö man kunna surfa till dess localhost/backup och se aktuell backupstatus
+18. Backupfilerna ska kopieras till det USB-minne som förväntas sitta i en av datorns USB-portar. Men se till att det hamnar på rätt USB-sticka, det kan ju finnas flera samtidigt.
+19. Om USB-stickan saknar plats ska alla inkrementella arkiv raderas från stickan, utom de som är senare än den senaste fulla backupen.
+20. Om USB-minnet ändå blir för fullt bör mail skickas till administratören, samtidigt som de äldsta arkiven bör raderas från stickan tills det finns ledig plats
+21. Endast lokala filer på aktuell dator ska backas, inte de som ligger på extern filserver. Inte heller applikationer, specialfiler osv ska vara med
+22. Vid full backup ska alla loggfiler och alla konfigurationsfiler tas med
+23. Det vore bra om man kan styra hur backupen ska fungera genom att ge den en egen konfigurationsfil
+24. Om det går att släcka LED-lampan i USB-stickan när kopieringen till den är klar (eller vid fel), så gör det, så att man vet att man kan ta ut stickan
+25. Man ska kunna starta backupskriptet interaktivt med en switch -s eller --search följt av ett filnamn (som kan innehålla wildcard/glob). Detta ska resultera i att skriptet talar om i vilka arkiv denna fil finns, så att man kan läsa tillbaka filen därifrån
+26. Kommentarer mm i skriptet, dess hjälptext, felmeddelanden, variabler, etc, ska baseras på engelska språket
+27. Vid lyckad körning ska skriptet avslutas med exit 0, i annat fall med väldokumenterad exitkod.
+28. Om det finns tid att skapa separat man-sida för skriptet, gör gärna det
+29. Även tomma kataloger ska tas med, men finns det möjlighet att välja bort dem antingen med switch eller konfiguration så vore det bra.
+30. Dolda filer och kataloger (som inleds med . i namnet) ska normalt inte backas. Finns det chans att styra detta via switch eller konfiguration vore det dock bra
+31. Ifall det finns en switch och en konfiguration för exakt samma alternativ, ska alltid kommandoradswitchen vinna!
+Motivation
+Det finns flera tankar bakom denna uppgift, bland annat dessa: 
+Jag vill inte att ni ska tro att Linux enbart används för enkla uppgifter såsom tex webserver, filserver, brandvägg, router osv. Förhoppningsvis ger denna uppgift exempel på hur oerhört flexibelt och formbart Linux är, samt hur mycket man kan göra utan att behöva köpa till en massa specialapplikationer.
+Uppgiften är realistisk. Sannorlikheten att man som sysadmin får en likartad uppgift är stor. Alla behöver ju backup, och det är få färdiga backupsystem som passar alla.
+Jag vill etablera en vana hos er att konsultera on-line-manualen och annan hjälp som finns på nätet för att hitta fakta.
+Det är tyvärr ganska få som klarar att upprätta bra kravspecar innan de hackar loss. Därför vill jag tvinga fram en sådan, det tjänar ni väldigt mycket på att kunna i längden.
+Övningen innehåller en hel del viktiga moment som inte alla, inte ens kravställaren, brukar tänka på. Exempel på detta är att planera test, underhålla versioner samt lägga vissa parametrar i konfigurationsfiler.
+Det finns två sätt att angripa uppgiften. Antingen suckar man och stönar och tycker att detta är rena straffet. Eller också biter man tag i problemet i positiv anda.
+Troligen kommer man inte klara allt under julledigheten. Därför är det viktigt att planera! Use Cases innehåller ju flera punkter som bara är önskemål, inte krav. Kanske man kan vänta med dessa? Kanske man kan jobba i grupp och dela arbetsuppgifterna mellan sig (precis som man ofta gör i verkligheten)?
+Strategier
+Här följer ett par tips som jag hoppas hjälper er hitta en bra strategi: 
+1. Bestäm vilka benämningar ni ska använda. Dokumentera dem och håller er benhårt till dem! Annars uppstår förvirring och det tar extra tid att utreda vad som menas.
+2. Om ni jobbar i grupp, skapa en gemensam webbsida, tex en Wiki. Flera alternativ finns, tex Projektplatsen, Github och Trac.
+3. Ta extremt små steg i taget. Testa mellan varje uppdatering (detta kallas regression test) och bygg upp en bank med testdata eller testscript.
+4. Testa alla nya kommandon manuellt innan ni använder dem i ert script.
+5. Konsultera onlinemanualen, speciell sektion 1 samt under rubriken SEE ALSO för respektive kommando.
+6. För anteckningar över kända problem och brister. Använd gärna nåt felrapporteringssystem som tex Jira, Bugzilla eller Flyspray.
+7. Jobba i en positiv anda!
+8. Kontakta mig om ni kör fast.
+9. Kör inte fast :)
+
+Kravspecregler
+Följ dessa regler och tips när ni skriver kravspecen: 
+Varje krav kallas ticket.
+Varje ticket ska ha ett unikt nummer som aldrig ändras eftersom det tjänar som referens i framtida dokumentation och diskussioner.
+Det får bara finnas ett krav per ticket.
+Absoluta krav ska formuleras med ordet shall.
+För varje krav ska det finnas ett DoD - Definition of Done. Detta talar om vilka villkor som ska vara uppfyllda för att man ska kunna acceptera kravet som genomfört.
+Komplettera gärna kravet med exempel.
+Varje krav ska vara fristående, dvs man ska kunna tolka det utan att behöva läsa andra krav (de ska vara Self Contained).
+Välj begrepp konsekvent.
+Tänk i pluralform. Om ni tex ska skriva kravspec för en mobiltelefon, referera till dess display som text Display1, inte bara Display, för förr eller senare kommer någon att vilja ha två displayer och då måste stora delar av specen skrivas om.
+Tänk på att allt som kan misstolkas kommer att misstolkas!
+Sätt er in i läsarens perspektiv. läsaren ju ha flera roller, tex tillverkare som ska ge offert på jobbet, eller dess designer, programmerare, sysadmin etc.
+Ibland kan det bli tydligare om man funderar över vad motsatsen till kravet är.
+Varje ticket bör formuleras så att man kan sätta ett separat pris på den.
+Dela upp omfattande krav i flera mindre tickets, så att de var och en kan testas för sig och realiseras av en enda person och helst på mindre än en arbetsdag.
+När ni kodar skriptet, dela upp det i sektioner eller moduler som motsvarar respektive krav. Skriv också gärna motsvarande ticketnummer som en kommentar i skriptet.
