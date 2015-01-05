@@ -1,0 +1,41 @@
+Kravspecifikation:
+
+Tickets:
+
+1.De filer som backas upp ska alltid hamna i samma packade arkivfil.
+2.Backupen ska innehålla hemkatalogen, /etc/local, /var/log, /etc och alla användares hemkataloger. Om inget annat angetts.
+3.Arkivfilernas namn ska följa detta “lx14achost_yymmddhhmm_T.tz. Bokstavens T visar om det är en inkrementell backup eller Full (bokstaven F)
+4.Det ska finnas en INFO.TXT i varje arkiv och den ska vara den första filen.
+5.INFO.TXT ska innehålla information om datorn, operativsystemer och annan information som är lämplig. Även information om backupscriptet som skapade arkivet och INFO.TXT
+6.FILES.TXT ska även finnas, ska lista alla filer och kataloger som finns i arkivet och ska kunna tolkas av datorn och även människor.
+7.Det ska finnas möjlighet att kunna välja mellan full backup och inkrementell, genom antingen via switchar -t [t|i]
+8.Filernas ägare, grupp, access ska följa med filerna in i arkivet.
+9.Scriptet ska startas automatiskt varje måndag - fredag kl 17:30
+10.Det ska inte går att exekvera scriptet igen under tiden som scriptet körs
+11.Vid fel, ska felet loggs och scriptet avbrytas på ett kontrollerat sätt utan att data förloras, förstörs eller ligger och skräpar.
+12.Arkivet och temporära filer ska vara skyddet mot obehöriga
+13.Backupen ska kopieras till ett USB-minne som ska sitta i datorn, och det ska alltid vara till rätt minne då det kan finns flera minnen i samtidigt.
+14.Om USB-minnet är fullt ska alla imkrementella arkiv raderas från USB-minnet, utom de som gjordes efter den senaste fulla backupen.
+15.Om USB-minnet skulle trots allt skulle bli fullt.
+16.Endast filer på den lokala datorn ska det göras backup utav. Inte heller utav program och applikationer, eller specialfiler.
+17.Vid full backup ska alla loggfiler och konfigurationsfiler tas med.
+18.Man ska kunna starta backupscriptet interaktivt med en switch -s eller --searcg, följt utav ett filnamn (som kan innehålla ett wildcard/glob). Detta ska resultera i att scriptet talar om i vilka akriv denna fil finns, så att man kan läsa tillbaka filen därifrån.
+19.Kommentarer och variabler i scriptet ska vara baserat på engelska.
+20.När scriptet har lyckats ska det avslutas med med exit 0, och väldokumenterad exitkod
+21.Tomma kataloger ska tas med, men man ska kunna välja bort dem, antingen med switch eller konfiguration.
+22.Switch ska alltid övervinna en befintlig konfiguration
+
+
+Ej krav, men +:
+
+1.Det vore bra om skriptet kunde versionhanteras, helst med Git, annars Mercurial eller SVN. Man kan kanske använda github
+2.Om versionshantering införs vore det bra om man kan starta skriptet med switch -V. Då ska det skriva ut sitt versionsnummer till stdout och avslutas. Samma sak bör också kunna ske med switch --version
+3.Med switch -h (och helst även --help) ska skriptet skriva ut en kompakt hjälp till stdout och avslutas.
+4.Det vore bra om ett mail skickas till administratören ifall fel uppstår. Detta mail måste vara klart och tydligt så att mottagaren vet exakt vad den bör vidta för åtgärd
+5.Om datorn har en webbserver igång bör man kunna surfa till dess localhost/backup och se aktuell backupstatus
+6.Om USB-minnet ändå blir för fullt bör mail skickas till administratören, samtidigt som de äldsta arkiven bör raderas från stickan tills det finns ledig plats
+7.Det vore bra om man kan styra hur backupen ska fungera genom att ge den en egen konfigurationsfil
+8.Om det går att släcka LED-lampan i USB-stickan när kopieringen till den är klar (eller vid fel), så gör det, så att man vet att man kan ta ut stickan
+9.Om det finns tid att skapa separat man-sida för skriptet, gör gärna det
+10.Dolda filer och kataloger (som inleds med . i namnet) ska normalt inte backas. Finns det chans att styra detta via switch eller konfiguration vore det dock bra
+11.Ifall det finns en switch och en konfiguration för exakt samma alternativ, ska alltid kommandoradswitchen vinna!
