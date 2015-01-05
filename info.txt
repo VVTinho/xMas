@@ -1,0 +1,2 @@
+INFO.TXT ska innehålla information om datorn, operativsystemet och annan fakta som kan vara bra att ha på längre sikt.
+Filen ska också informera om vilken version av backupskriptet som skapade denna backup.
