@@ -1,4 +1,4 @@
-!/bin/bash
+#!/bin/bash
 
 # Undvik att köra scriptet på samma gång. Det är en av punkterna i dokumentationen
 # Prova med kommando trap eller flock
